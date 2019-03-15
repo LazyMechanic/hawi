@@ -1,0 +1,2 @@
+# hawi
+Simple Script Language
