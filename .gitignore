@@ -1,0 +1,7 @@
+.vs
+build
+bin
+test/bin
+doc/html
+.idea
+cmake-build-debug
