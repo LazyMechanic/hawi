@@ -1,23 +1,65 @@
-# hawi
+# Hawi
 Simple Script Language
 
 ```
-hawi = ...
+hawi = expr*
 
-statement = 
+expr = statement |
+    for_loop |
+    while_loop |
+    function |
+    branch
 
-for_loop = ...
-while_loop = ...
-statement = ...
+statement = var_def | assign | computing SEMICOLON
 
-function_def = ...
-function_exec = ...
+var_def = KW_LET ID
+assign = KW_LET? ID ASSIGN_OP computing
+computing = value (op value)*
 
-#==========================================
+value = ID |
+    DIGIT | 
+    FLOAT_DIGIT | 
+    STRING | 
+    BOOL
+
+op = ADD_OP |
+    SUB_OP |
+    MULT_OP |
+    DIV_OP
+
+for_loop = KW_FOR O_BRACKET assign? SEMICOLON check_statement? SEMICOLON computing? C_BRACKET 
+    O_BRACE expr* C_BRACE
+
+while_loop = KW_WHILE O_BRACKET check_statement C_BRACKET 
+    O_BRACE expr* C_BRACE
+
+check_statement = value check_op computing
+
+check_op = EQUAL_OP |
+    NOT_EQUAL_OP |
+    GREATER_OP |
+    LESS_OP |
+    GREATER_OR_EQUAL_OP |
+    LESS_OR_EQUAL_OP
+
+function = function_def | function_exec
+
+function_def = KW_FUNCTION ID O_BRACKET var_def* C_BRACKET 
+    O_BRACE (expr | (return computing*))* C_BRACE
+function_exec = ID O_BRACKET computing* C_BRACKET
+
+# ==========================================
 
 # KW_* - is Key Word
 
+KW_CLASS = "class"
+KW_INT = "int"
+KW_UINT = "uint"
+KW_CHAR = "char"
+KW_BOOL = "bool"
+KW_STRING = "string"
 KW_LET = "let"
+KW_CONST = "const"
 KW_FUNCTION = "function"
 KW_RETURN = "return"
 KW_IF = "if"
@@ -27,7 +69,7 @@ KW_WHILE = "while"
 KW_BREAK = "break"
 KW_CONTINUE = "continue"
 
-VAR = "[_a-zA-Z]+[_a-zA-Z0-9]*"
+ID = "[_a-zA-Z]+[_a-zA-Z0-9]*"
 
 SEMICOLON = ";"
 COMMA = ","
