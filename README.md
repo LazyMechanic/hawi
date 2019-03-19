@@ -1,4 +1,4 @@
-# Hawi
+# Hygge
 Simple Script Language
 
 ```
