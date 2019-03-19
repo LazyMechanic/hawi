@@ -4,7 +4,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-project(hawi)
+project(hygge)
 
 set(PROJECT_DIR ${CMAKE_SOURCE_DIR})
 
@@ -19,5 +19,5 @@ endif()
 set(PROJECT_INC_DIR ${PROJECT_DIR}/include)
 set(PROJECT_SRC_DIR ${PROJECT_DIR}/src)
 
-add_subdirectory(src/hawi)
-add_subdirectory(test/hawi)
+add_subdirectory(src/hygge)
+add_subdirectory(test/hygge)
