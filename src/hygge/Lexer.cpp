@@ -21,31 +21,34 @@ void Lexer::process(const std::string& script)
 
         size_t candidatesCount = getCandidatesCount(buffer);
 
-        // If no have candidates then go to one step back
-        if (candidatesCount == 0) {
+        // If character is first in script and it is wrong
+        if (candidatesCount == 0 && chIt == script.begin()) {
+            throw std::runtime_error("Lexer error: unexpected characters: \"" + buffer + "\"");
+        }
+
+        // If no have candidates then check previous buffer
+        if (candidatesCount == 0 || std::next(chIt) == script.end()) {
+            // If current character is end of script we need check current buffer
+            if (std::next(chIt) == script.end()) {
+                prevBuffer = buffer;
+            }
+
             std::list<Lexeme> candidates = getCandidates(prevBuffer);
+
             // If we have candidates to previous buffer
             if (!candidates.empty()) {
                 // If terminal is not a whitespace
                 if (candidates.begin()->type != grammar::TerminalType::Whitespace) {
                     m_tokens.emplace_back(candidates.begin()->type, prevBuffer);
                 }
-                --chIt;
+
+                // If current character is not end of script
+                if (std::next(chIt) != script.end()) {
+                    --chIt;
+                }
             }
             else {
-                throw std::runtime_error("Lexer error: unexpected characters: \"" + buffer + "\"");
-            }
-            prevBuffer.clear();
-            buffer.clear();
-            continue;
-        }
-
-        // If we come to end of script. Handle the case if a valid terminal is located at the end of the script
-        if (std::next(chIt) == script.end()) {
-            std::list<Lexeme> candidates = getCandidates(buffer);
-            // If we have candidates to current buffer
-            if (!candidates.empty()) {
-                m_tokens.emplace_back(candidates.begin()->type, buffer);
+                throw std::runtime_error("Lexer error: unexpected character: \"" + std::string(1, buffer.back()) + "\"");
             }
             prevBuffer.clear();
             buffer.clear();
@@ -60,6 +63,10 @@ std::list<Token>& Lexer::getTokens()
 
 std::list<Lexeme> Lexer::getCandidates(const std::string& str) const
 {
+    if (str.empty()) {
+        return std::list<Lexeme>();
+    }
+
     std::list<Lexeme> result;
     const std::list<Lexeme>& lexemes = grammar::getLexemes();
     
@@ -84,6 +91,10 @@ std::list<Lexeme> Lexer::getCandidates(const std::string& str) const
 
 size_t Lexer::getCandidatesCount(const std::string& str) const
 {
+    if (str.empty()) {
+        return 0;
+    }
+
     std::list<Lexeme> result;
     const std::list<Lexeme>& lexemes = grammar::getLexemes();
 

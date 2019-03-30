@@ -30,9 +30,8 @@ const std::list<Lexeme>& getLexemes()
         { KeywordBreak, std::regex("^break$"), High },
         { KeywordContinue, std::regex("^continue$"), High },
 
-        { KeywordSingleComment, std::regex("^//$"), High },
-        { KeywordMultiCommentOpen, std::regex("^/\\*$"), High },
-        { KeywordMultiCommentClose, std::regex("^\\*/$"), High },
+        { KeywordSingleLineComment, std::regex("^//[ \t\\\\(\\)\\{\\}\\[\\]\\+\\-\\*\\|&\\.,/\\?\\^%@!#\\$=\'\":;0-9a-zA-Z]*$"), Highest },
+        { KeywordMultiLineComment, std::regex("^/\\*[\\s\\\\(\\)\\{\\}\\[\\]\\+\\-\\*\\|&\\.,/\\?\\^%@!#\\$=\'\":;0-9a-zA-Z]*[\\*/]?$"), Highest },
 
         { Semicolon, std::regex("^;$"), High },
         { Comma, std::regex("^,$"), High },
@@ -41,7 +40,7 @@ const std::list<Lexeme>& getLexemes()
         { Id, std::regex("^[_a-zA-Z]+[_a-zA-Z0-9]*$"), Normal },
         { Digit, std::regex("^0|([1-9][0-9]*)$"), Normal },
         { Float, std::regex("^[0-9]+\\.[0-9]*$"), Normal },
-        { String, std::regex("^\"[\\s\\\\(\\)\\{\\}\\[\\]\\+\\-\\*\\|&\\.,/\\?\\^%@!#\\$=\'\":;0-9a-zA-Z]*\"?$"), Normal },
+        { String, std::regex("^\"([ \t\\\\(\\)\\{\\}\\[\\]\\+\\-\\*\\|&\\.,/\\?\\^%@!#\\$=(\\\')(\\\"):;0-9a-zA-Z]*)|((\\\')|(\\\"))*\"?$"), Normal },
         { Bool, std::regex("^(true)|(false)$"), Normal },
 
         { Whitespace, std::regex("^\\s+$"), Low },

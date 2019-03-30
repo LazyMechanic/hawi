@@ -11,7 +11,6 @@ enum TerminalType
     KeywordClass,
     KeywordInt,
     KeywordUInt,
-    KeywordChar,
     KeywordBool,
     KeywordString,
     KeywordLet,
@@ -30,9 +29,8 @@ enum TerminalType
     KeywordBreak,
     KeywordContinue,
 
-    KeywordSingleComment,
-    KeywordMultiCommentOpen,
-    KeywordMultiCommentClose,
+    KeywordSingleLineComment,
+    KeywordMultiLineComment,
 
     Semicolon,
     Comma,
@@ -92,9 +90,11 @@ enum TerminalType
 
 enum Priority
 {
+    Highest = 0,
     High,
     Normal,
-    Low
+    Low,
+    Lowest
 };
 
 const std::list<Lexeme>& getLexemes();
