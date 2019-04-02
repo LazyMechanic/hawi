@@ -20,7 +20,7 @@ public:
      * \param regex Lexeme regex
      * \param priority Priority
      */
-    Lexeme(grammar::TerminalType type, const std::regex& regex, grammar::Priority priority);
+    Lexeme(grammar::terminal::Type type, const std::regex& regex, grammar::Priority priority);
 
     /**
      * \brief Default copy Lexeme constructor
@@ -50,7 +50,7 @@ public:
     /**
      * \brief Lexeme type
      */
-    grammar::TerminalType type;
+    grammar::terminal::Type type;
 
     /**
      * \brief Lexeme regex

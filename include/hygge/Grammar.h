@@ -6,7 +6,8 @@ namespace hygge {
 class Lexeme;
 
 namespace grammar {
-enum TerminalType
+namespace terminal {
+enum Type
 {
     KeywordClass,
     KeywordInt,
@@ -39,7 +40,7 @@ enum TerminalType
     Id,
     Digit,
     Float,
-    String,
+    Literal,
     Bool,
 
     Whitespace,
@@ -87,6 +88,7 @@ enum TerminalType
 
     Invalid
 };
+}
 
 enum Priority
 {

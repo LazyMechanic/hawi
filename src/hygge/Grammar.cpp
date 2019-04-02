@@ -8,6 +8,7 @@ namespace hygge {
 namespace grammar {
 const std::list<Lexeme>& getLexemes()
 {
+    using namespace terminal;
     static std::list<Lexeme> lexemes = {
         { KeywordClass, std::regex("^class$"), High },
         { KeywordInt, std::regex("^int$"), High },
@@ -30,17 +31,17 @@ const std::list<Lexeme>& getLexemes()
         { KeywordBreak, std::regex("^break$"), High },
         { KeywordContinue, std::regex("^continue$"), High },
 
-        { KeywordSingleLineComment, std::regex("^//[ \t\\\\(\\)\\{\\}\\[\\]\\+\\-\\*\\|&\\.,/\\?\\^%@!#\\$=\'\":;0-9a-zA-Z]*$"), Highest },
-        { KeywordMultiLineComment, std::regex("^/\\*[\\s\\\\(\\)\\{\\}\\[\\]\\+\\-\\*\\|&\\.,/\\?\\^%@!#\\$=\'\":;0-9a-zA-Z]*[\\*/]?$"), Highest },
+        { KeywordSingleLineComment, std::regex("^//[^\\x03]*$"), Highest },
+        { KeywordMultiLineComment, std::regex("^/\\*(?:[^\\*]/|\\*[^/]|[^\\*/])*[^\\x03]?[^\\x03]?"), Highest },
 
         { Semicolon, std::regex("^;$"), High },
         { Comma, std::regex("^,$"), High },
         { Dot, std::regex("^\\.$"), High },
 
         { Id, std::regex("^[_a-zA-Z]+[_a-zA-Z0-9]*$"), Normal },
-        { Digit, std::regex("^0|([1-9][0-9]*)$"), Normal },
-        { Float, std::regex("^[0-9]+\\.[0-9]*$"), Normal },
-        { String, std::regex("^\"([ \t\\\\(\\)\\{\\}\\[\\]\\+\\-\\*\\|&\\.,/\\?\\^%@!#\\$=(\\\')(\\\"):;0-9a-zA-Z]*)|((\\\')|(\\\"))*\"?$"), Normal },
+        { Digit, std::regex("^0|([1-9][0-9]*)"), Normal },
+        { Float, std::regex("^[0-9]+\\.[0-9]*"), Normal },
+        { Literal, std::regex("^(\"(?:\\\\.|[^\"])*\"$)|(\"(?:\\\\.|[^\"])*$)"), Normal },
         { Bool, std::regex("^(true)|(false)$"), Normal },
 
         { Whitespace, std::regex("^\\s+$"), Low },
@@ -52,7 +53,7 @@ const std::list<Lexeme>& getLexemes()
         { CloseBracket, std::regex("^\\)$"), High },
 
         { OpenSquareBracket, std::regex("^\\[$"), High },
-        { CloseSquareBracket, std::regex("^\\[$"), High },
+        { CloseSquareBracket, std::regex("^\\]$"), High },
 
         { AssignOperator, std::regex("^=$"), High },
         { AddOperator, std::regex("^\\+$"), High },

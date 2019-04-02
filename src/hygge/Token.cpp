@@ -2,12 +2,12 @@
 
 namespace hygge {
 Token::Token() :
-    type(grammar::TerminalType::Invalid),
+    type(grammar::terminal::Type::Invalid),
     value("")
 {
 }
 
-Token::Token(grammar::TerminalType type, const std::string& value) :
+Token::Token(grammar::terminal::Type type, const std::string& value) :
     type(type),
     value(value)
 {

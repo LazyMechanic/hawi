@@ -36,17 +36,32 @@ public:
 private:
     /**
      * \brief Find all candidates in lexemes
-     * \param str String for checking
+     * \param str Literal for checking
      * \return List of lexeme candidates
      */
     std::list<Lexeme> getCandidates(const std::string& str) const;
 
     /**
-     * \brief Find all candidates in lexemes
-     * \param str String for checking
-     * \return Size of lexeme candidates list
+     * \brief Make token instance
+     * \param buf String from which the token will be created
+     * \return Token instance
      */
-    size_t getCandidatesCount(const std::string& str) const;
+    Token makeToken(const std::string& buf) const;
+
+    /**
+     * \brief 
+     * \param script 
+     * \param currentScriptOffset 
+     * \return 
+     */
+    std::string getNextScriptBuffer(const std::string& script, std::size_t& currentScriptOffset) const;
+
+    /**
+     * \brief Try create and add token in m_tokens
+     * \param buffer Buffer from which will create the token
+     * \return True if token is valid
+     */
+    bool tryAddToken(std::string& buffer);
 
     /**
      * \brief Tokens

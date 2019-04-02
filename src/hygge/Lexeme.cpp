@@ -2,13 +2,13 @@
 
 namespace hygge {
 Lexeme::Lexeme() :
-    type(grammar::TerminalType::Invalid),
+    type(grammar::terminal::Type::Invalid),
     regex(""),
     priority(grammar::Priority::Low)
 {
 }
 
-Lexeme::Lexeme(grammar::TerminalType type, const std::regex& regex, grammar::Priority priority) :
+Lexeme::Lexeme(grammar::terminal::Type type, const std::regex& regex, grammar::Priority priority) :
     type(type),
     regex(regex),
     priority(priority)

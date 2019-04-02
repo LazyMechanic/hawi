@@ -17,7 +17,7 @@ public:
      * \param type Token type
      * \param value Token value
      */
-    Token(grammar::TerminalType type, const std::string& value);
+    Token(grammar::terminal::Type type, const std::string& value);
 
     /**
      * \brief Default copy Token constructor
@@ -47,7 +47,7 @@ public:
     /**
      * \brief Token type
      */
-    grammar::TerminalType type;
+    grammar::terminal::Type type;
 
     /**
      * \brief Token value

@@ -2,56 +2,48 @@
 
 #include <regex>
 #include <algorithm>
+#include <iostream>
 
 #include <hygge/Lexeme.h>
 
 namespace hygge {
+constexpr std::size_t etx = 0x03;
+
 Lexer::Lexer()
 {
 }
 
 void Lexer::process(const std::string& script)
 {
-    std::string prevBuffer("");
+    m_tokens.clear();
     std::string buffer("");
+    buffer.reserve(4096);
 
-    for (auto chIt = script.begin(); chIt != script.end(); ++chIt) {
-        prevBuffer = buffer;
-        buffer += *chIt;
+    std::size_t scriptOffset = 0;
+    std::string scriptBuffer = getNextScriptBuffer(script, scriptOffset);
 
-        size_t candidatesCount = getCandidatesCount(buffer);
+    auto chIt = scriptBuffer.cbegin();
+    while (true) {
+        // If reach end of buffer
+        if (*chIt == etx) {
+            scriptBuffer = getNextScriptBuffer(script, scriptOffset);
+            chIt = scriptBuffer.begin();
 
-        // If character is first in script and it is wrong
-        if (candidatesCount == 0 && chIt == script.begin()) {
-            throw std::runtime_error("Lexer error: unexpected characters: \"" + buffer + "\"");
+            // If reach end of script
+            if (*chIt == etx) {
+                buffer += *chIt;
+                tryAddToken(buffer);
+                break;
+            }
         }
 
-        // If no have candidates then check previous buffer
-        if (candidatesCount == 0 || std::next(chIt) == script.end()) {
-            // If current character is end of script we need check current buffer
-            if (std::next(chIt) == script.end()) {
-                prevBuffer = buffer;
-            }
+        buffer += *chIt;
+        std::cout << buffer << "\n";
 
-            std::list<Lexeme> candidates = getCandidates(prevBuffer);
+        bool isTokenValid = tryAddToken(buffer);
 
-            // If we have candidates to previous buffer
-            if (!candidates.empty()) {
-                // If terminal is not a whitespace
-                if (candidates.begin()->type != grammar::TerminalType::Whitespace) {
-                    m_tokens.emplace_back(candidates.begin()->type, prevBuffer);
-                }
-
-                // If current character is not end of script
-                if (std::next(chIt) != script.end()) {
-                    --chIt;
-                }
-            }
-            else {
-                throw std::runtime_error("Lexer error: unexpected character: \"" + std::string(1, buffer.back()) + "\"");
-            }
-            prevBuffer.clear();
-            buffer.clear();
+        if (!isTokenValid) {
+            ++chIt;;
         }
     }
 }
@@ -89,27 +81,61 @@ std::list<Lexeme> Lexer::getCandidates(const std::string& str) const
     return result;
 }
 
-size_t Lexer::getCandidatesCount(const std::string& str) const
+Token Lexer::makeToken(const std::string& buf) const
 {
-    if (str.empty()) {
-        return 0;
+    std::list<Lexeme> candidates = getCandidates(buf);
+
+    // If we have candidates
+    if (!candidates.empty()) {
+        return Token(candidates.front().type, buf);
     }
+    else {
+        return Token(grammar::terminal::Type::Invalid, buf);
+    }
+}
 
-    std::list<Lexeme> result;
-    const std::list<Lexeme>& lexemes = grammar::getLexemes();
+std::string Lexer::getNextScriptBuffer(const std::string& script, std::size_t& currentScriptOffset) const
+{
+    const std::size_t scriptCopySize = 4094;
+    std::string nextScriptBuffer;
+    nextScriptBuffer.reserve(4096);
+    nextScriptBuffer = etx;
 
-    auto it = lexemes.begin();
-    while (it != lexemes.end()) {
-        it = std::find_if(it, lexemes.end(), [&str](const Lexeme & l) {
-            return std::regex_match(str, l.regex);
-            });
-
-        if (it != lexemes.end()) {
-            result.push_back(*it);
-            ++it;
+    if (currentScriptOffset < script.size()) {
+        nextScriptBuffer = script.substr(currentScriptOffset, scriptCopySize);
+        // If reach the end of the script
+        if ((currentScriptOffset + scriptCopySize) >= script.size()) {
+            nextScriptBuffer += etx;
         }
+        currentScriptOffset += scriptCopySize;
     }
 
-    return result.size();
+    return nextScriptBuffer;
+}
+
+bool Lexer::tryAddToken(std::string& buffer)
+{
+    bool result = false;
+
+    // If current Token from current buffer is invalid
+    if (makeToken(buffer).type == grammar::terminal::Type::Invalid) {
+        std::string prevBuffer = buffer.substr(0, buffer.size() - 1);
+
+        Token token = makeToken(prevBuffer);
+        if (token.type != grammar::terminal::Type::Whitespace) {
+            m_tokens.push_back(token);
+        }
+
+        result = true;
+
+        // If token is invalid
+        if (token.type == grammar::terminal::Invalid) {
+            throw std::runtime_error("Lexer error: unexpected token");
+        }
+
+        buffer.clear();
+    }
+
+    return result;
 }
 }
