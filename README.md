@@ -68,8 +68,8 @@ KW_WHILE = "while"
 KW_FOR = "for"
 KW_BREAK = "break"
 KW_CONTINUE = "continue"
-KW_SINGLE_COMMENT = "//[ \t\\\(\)\{\}\[\]\+\-\*\|&\.,/\?\^%@!#\$=\'\":;0-9a-zA-Z]*"
-KW_MULTI_LINE_COMMENT = "^/\*[\s\\\(\)\{\}\[\]\+\-\*\|&\.,/\?\^%@!#\$=\'\":;0-9a-zA-Z]*[\*/]?$"
+KW_SINGLE_COMMENT = "^//[^\x03]*$"
+KW_MULTI_LINE_COMMENT = "^/\*(?:[^\*]/|\*[^/]|[^\*/])*[^\x03]?[^\x03]?"
 
 ID = "[_a-zA-Z]+[_a-zA-Z0-9]*"
 
@@ -79,7 +79,7 @@ DOT = "."
 
 DIGIT = "0|([1-9][0-9]*)"
 FLOAT = "[0-9]+\.[0-9]+"
-STRING = "\"[ \t\\\(\)\{\}\[\]\+\-\*\|&\.,/\?\^%@!#\$=\'\":;0-9a-zA-Z]*\""
+LITERAL = "^(\"(?:\\\.|[^\"])*\"$)|(\"(?:\\\.|[^\"])*$)"
 BOOL = "(true)|(false)"
 
 O_BRACE = "{"

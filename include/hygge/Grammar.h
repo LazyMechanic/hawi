@@ -90,6 +90,15 @@ enum Type
 };
 }
 
+namespace nonterminal {
+    enum Type
+    {
+
+
+        Invalid
+    };
+}
+
 enum Priority
 {
     Highest = 0,
