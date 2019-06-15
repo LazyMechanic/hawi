@@ -55,6 +55,8 @@ public:
     std::string value;
 };
 
+using TokenList = std::list<Token>;
+
 bool operator ==(const Token& left, const Token& right);
 
 bool operator !=(const Token& left, const Token& right);

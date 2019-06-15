@@ -253,7 +253,7 @@ TEST_CASE("Values")
     SECTION("Single float number")
     {
         std::list<Token> correctTokens = {
-            {terminal::Type::Float, "0.425"},
+            {terminal::Type::FloatDigit, "0.425"},
         };
 
         checkTokens(lexer, " \t\n0.425", correctTokens);
@@ -262,10 +262,10 @@ TEST_CASE("Values")
     SECTION("Several float numbers")
     {
         std::list<Token> correctTokens = {
-            {terminal::Type::Float, "0.1562"},
-            {terminal::Type::Float, "1.516"},
-            {terminal::Type::Float, "0.00124"},
-            {terminal::Type::Float, "8329.58924"}
+            {terminal::Type::FloatDigit, "0.1562"},
+            {terminal::Type::FloatDigit, "1.516"},
+            {terminal::Type::FloatDigit, "0.00124"},
+            {terminal::Type::FloatDigit, "8329.58924"}
         };
 
         checkTokens(lexer, "0.1562  \t\n 1.516     0.00124\n8329.58924", correctTokens);

@@ -30,6 +30,20 @@ enum Type
     KeywordBreak,
     KeywordContinue,
 
+    KeywordList,
+    KeywordSet,
+
+    KeywordListAdd,
+    KeywordListRemove,
+    KeywordListGet,
+    KeywordSetAdd,
+    KeywordSetRemove,
+    KeywordSetHas,
+    KeywordSetRehash,
+    KeywordBack,
+    KeywordFront,
+    KeywordPrint,
+
     KeywordSingleLineComment,
     KeywordMultiLineComment,
 
@@ -37,9 +51,15 @@ enum Type
     Comma,
     Dot,
 
+    Quotes,
+
+    RequestPosition,
+    ResponsePosition,
+    Mark,
+
     Id,
     Digit,
-    Float,
+    FloatDigit,
     Literal,
     Bool,
 
@@ -93,7 +113,29 @@ enum Type
 namespace nonterminal {
     enum Type
     {
+        Expr,
 
+        Statement,
+        ForLoop,
+        WhileLoop,
+        Branch,
+        Print,
+
+        VarDef,
+        Assign,
+        Computing,
+
+        Value,
+        Op,
+
+        CheckStatement,
+        CheckOp,
+        LogicOp,
+
+        IfBranch,
+        ElseBranch,
+
+        Printable,       
 
         Invalid
     };

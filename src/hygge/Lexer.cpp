@@ -38,7 +38,6 @@ void Lexer::process(const std::string& script)
         }
 
         buffer += *chIt;
-        std::cout << buffer << "\n";
 
         bool isTokenValid = tryAddToken(buffer);
 

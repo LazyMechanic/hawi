@@ -2,38 +2,51 @@
 Simple Script Language
 
 ```
-hawi = expr*
+hygge = expr*
 
-expr = statement |
-    for_loop |
+expr = statement | 
     while_loop |
-    function |
     branch
 
-statement = var_def | assign | computing SEMICOLON
+statement = var_def | assign | list_op | print SEMICOLON
 
-var_def = KW_LET ID
-assign = KW_LET? ID ASSIGN_OP computing
+var_def = KW_LET | KW_LIST | KW_SET ID
+assign = ID ASSIGN_OP computing
 computing = value (op value)*
 
+list_op = list_add_op |
+    list_remove_op |
+    list_get_op |
+    list_has_op
+
+# 1. List id
+# 2. Value
+# 3. Position
+list_add_op = KW_LISTADD ID value list_pos
+# 1. List id
+# 2. Position
+list_remove_op = KW_LISTREMOVE ID list_pos
+# 1. List id
+# 2. Var for save
+# 3. Position
+list_get_op = KW_LISTGET ID ID list_pos
+
+list_pos = KW_BACK | KW_FRONT | DIGIT | ID
+
 value = ID |
-    DIGIT | 
-    FLOAT_DIGIT | 
-    STRING | 
-    BOOL
+    DIGIT |
+    FLOAT_DIGIT |
+    (O_BRACKET computing C_BRACKET)
 
 op = ADD_OP |
     SUB_OP |
     MULT_OP |
     DIV_OP
 
-for_loop = KW_FOR O_BRACKET assign? SEMICOLON check_statement? SEMICOLON computing? C_BRACKET 
-    O_BRACE expr* C_BRACE
-
 while_loop = KW_WHILE O_BRACKET check_statement C_BRACKET 
     O_BRACE expr* C_BRACE
 
-check_statement = value check_op computing
+check_statement = computing check_op computing
 
 check_op = EQUAL_OP |
     NOT_EQUAL_OP |
@@ -42,32 +55,35 @@ check_op = EQUAL_OP |
     GREATER_OR_EQUAL_OP |
     LESS_OR_EQUAL_OP
 
-function = function_def | function_exec
+branch = if_branch
 
-function_def = KW_FUNCTION ID O_BRACKET var_def* C_BRACKET 
-    O_BRACE (expr | (return computing*))* C_BRACE
-function_exec = ID O_BRACKET computing* C_BRACKET
+if_branch = KW_IF O_BRACKET check_statement C_BRACKET O_BRACE expr* C_BRACE
+
+print = KW_PRINT printable
+
+printable = ID | DIGIT | FLOAT_DIGIT
 
 # ==========================================
 
 # KW_* - is Key Word
 
-KW_CLASS = "class"
-KW_INT = "int"
-KW_UINT = "uint"
-KW_BOOL = "bool"
-KW_STRING = "string"
 KW_LET = "let"
-KW_CONST = "const"
-KW_FUNCTION = "function"
-KW_RETURN = "return"
 KW_IF = "if"
-KW_ELSE = "else"
-KW_DO = "do"
 KW_WHILE = "while"
-KW_FOR = "for"
-KW_BREAK = "break"
-KW_CONTINUE = "continue"
+
+KW_LIST = "list"
+KW_SET = "set"
+KW_LISTADD = "listadd"
+KW_LISTREMOVE = "listremove"
+KW_LISTGET = "listget"
+KW_SETADD = "setadd"
+KW_SETREMOVE = "setremove"
+KW_SETHAS = "sethas"
+KW_BACK = "back"
+KW_FRONT = "front"
+KW_SETREHASH = "setrehash"
+KW_PRINT = "print"
+
 KW_SINGLE_COMMENT = "^//[^\x03]*$"
 KW_MULTI_LINE_COMMENT = "^/\*(?:[^\*]/|\*[^/]|[^\*/])*[^\x03]?[^\x03]?"
 
@@ -77,28 +93,21 @@ SEMICOLON = ";"
 COMMA = ","
 DOT = "."
 
+QUOTES = "\""
+
 DIGIT = "0|([1-9][0-9]*)"
-FLOAT = "[0-9]+\.[0-9]+"
-LITERAL = "^(\"(?:\\\.|[^\"])*\"$)|(\"(?:\\\.|[^\"])*$)"
-BOOL = "(true)|(false)"
+FLOAT_DIGIT = "[0-9]+\.[0-9]+"
 
 O_BRACE = "{"
 C_BRACE = "}"
 O_BRACKET = "("
 C_BRACKET = ")"
-O_SQUARE_BRACKET = "["
-C_SQUARE_BRACKET = "]"
 
 ASSIGN_OP = "="
 ADD_OP = "\+"
 SUB_OP = "\-"
 MULT_OP = "\*"
 DIV_OP = "\/"
-MOD_OP = "%"
-UNARY_PLUS_OP = "\+"
-UNARY_MINUS_OP = "\-"
-INC_OP = "\+\+"
-DEC_OP = "\-\-"
 
 EQUAL_OP = "=="
 NOT_EQUAL_OP = "!="
@@ -106,15 +115,4 @@ GREATER_OP = ">"
 LESS_OP = "<"
 GREATER_OR_EQUAL_OP = ">="
 LESS_OR_EQUAL_OP = "<="
-
-NOT_OP = "!"
-AND_OP = "&&"
-OR_OP = "\|\|"
-
-BIT_NOT_OP = "~"
-BIT_AND_OP = "&"
-BIT_OR_OP = "\|"
-BIT_XOR_OP = "\^"
-BIT_LSHIFT_OP = "<<"
-BIT_RSHIFT_OP = ">>"
 ```

@@ -31,6 +31,20 @@ const std::list<Lexeme>& getLexemes()
         { KeywordBreak, std::regex("^break$"), High },
         { KeywordContinue, std::regex("^continue$"), High },
 
+        { KeywordList, std::regex("^list$"), High },
+        { KeywordSet, std::regex("^set$"), High },
+
+        { KeywordListAdd, std::regex("^listadd$"), High },
+        { KeywordListRemove, std::regex("^listremove$"), High },
+        { KeywordListGet, std::regex("^listget$"), High },
+        { KeywordSetAdd, std::regex("^setadd$"), High },
+        { KeywordSetRemove, std::regex("^setremove$"), High },
+        { KeywordSetHas, std::regex("^sethas$"), High },
+        { KeywordSetRehash, std::regex("^setrehash$"), High },
+        { KeywordBack, std::regex("^back$"), High },
+        { KeywordFront, std::regex("^front$"), High },
+        { KeywordPrint, std::regex("^print$"), High },
+
         { KeywordSingleLineComment, std::regex("^//[^\\x03]*$"), Highest },
         { KeywordMultiLineComment, std::regex("^/\\*(?:[^\\*]/|\\*[^/]|[^\\*/])*[^\\x03]?[^\\x03]?"), Highest },
 
@@ -38,9 +52,11 @@ const std::list<Lexeme>& getLexemes()
         { Comma, std::regex("^,$"), High },
         { Dot, std::regex("^\\.$"), High },
 
+        { Quotes, std::regex("^\"$"), High },
+
         { Id, std::regex("^[_a-zA-Z]+[_a-zA-Z0-9]*$"), Normal },
         { Digit, std::regex("^0|([1-9][0-9]*)"), Normal },
-        { Float, std::regex("^[0-9]+\\.[0-9]*"), Normal },
+        { FloatDigit, std::regex("^[0-9]+\\.[0-9]*"), Normal },
         { Literal, std::regex("^(\"(?:\\\\.|[^\"])*\"$)|(\"(?:\\\\.|[^\"])*$)"), Normal },
         { Bool, std::regex("^(true)|(false)$"), Normal },
 
